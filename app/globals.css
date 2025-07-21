@@ -1,0 +1,387 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Animações personalizadas para efeitos de voz */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-20px) rotate(120deg);
+  }
+  66% {
+    transform: translateY(-10px) rotate(240deg);
+  }
+}
+
+@keyframes bubble-rise {
+  0% {
+    transform: translateY(100vh) scale(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes voice-wave {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2) rotate(180deg);
+    opacity: 0.7;
+  }
+}
+
+/* Novas animações para ondas sonoras e energia */
+@keyframes sound-wave {
+  0% {
+    transform: scale(0.8) rotate(0deg);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2) rotate(180deg);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.6) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes energy-pulse {
+  0% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  25% {
+    transform: scale(1.3) translateY(-10px);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1) translateY(-5px);
+    opacity: 0.9;
+  }
+  75% {
+    transform: scale(1.4) translateY(-15px);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes ripple-effect {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@keyframes particle-explosion {
+  0% {
+    transform: translateX(0) translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(var(--x)) translateY(var(--y)) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Novas animações para pingo de água */
+@keyframes water-drop {
+  0% {
+    transform: scale(0) translateY(-20px);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1) translateY(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.5) translateY(10px);
+    opacity: 0;
+  }
+}
+
+@keyframes water-ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+@keyframes splash-effect {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  25% {
+    transform: scale(1.2) rotate(90deg);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.5) rotate(180deg);
+    opacity: 0.6;
+  }
+  75% {
+    transform: scale(2) rotate(270deg);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(2.5) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes droplet-fall {
+  0% {
+    transform: translateY(-50px) scale(0);
+    opacity: 0;
+  }
+  20% {
+    transform: translateY(-30px) scale(1);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(20px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-bubble-rise {
+  animation: bubble-rise 4s ease-out infinite;
+}
+
+.animate-voice-wave {
+  animation: voice-wave 2s ease-out infinite;
+}
+
+.animate-sparkle {
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+.animate-sound-wave {
+  animation: sound-wave 2s ease-out infinite;
+}
+
+.animate-energy-pulse {
+  animation: energy-pulse 1.5s ease-in-out infinite;
+}
+
+.animate-ripple-effect {
+  animation: ripple-effect 1s ease-out infinite;
+}
+
+.animate-particle-explosion {
+  animation: particle-explosion 1s ease-out forwards;
+}
+
+.animate-water-drop {
+  animation: water-drop 1.5s ease-out infinite;
+}
+
+.animate-water-ripple {
+  animation: water-ripple 2s ease-out infinite;
+}
+
+.animate-splash-effect {
+  animation: splash-effect 1.5s ease-out infinite;
+}
+
+.animate-droplet-fall {
+  animation: droplet-fall 2s ease-out infinite;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+  }
+  
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+}
+
+/* Estilos para modo de alto contraste */
+.high-contrast {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --card: 0 0% 0%;
+  --card-foreground: 0 0% 100%;
+  --popover: 0 0% 0%;
+  --popover-foreground: 0 0% 100%;
+  --primary: 0 0% 100%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 0 0% 20%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 0 0% 20%;
+  --muted-foreground: 0 0% 80%;
+  --accent: 0 0% 20%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 100% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 50%;
+  --input: 0 0% 20%;
+  --ring: 0 0% 100%;
+}
+
+.high-contrast * {
+  border-color: hsl(0, 0%, 50%) !important;
+}
+
+.high-contrast body {
+  background-color: hsl(0, 0%, 0%) !important;
+  color: hsl(0, 0%, 100%) !important;
+}
+
+.high-contrast .bg-white {
+  background-color: hsl(0, 0%, 0%) !important;
+}
+
+.high-contrast .bg-gray-50 {
+  background-color: hsl(0, 0%, 10%) !important;
+}
+
+.high-contrast .bg-gray-100 {
+  background-color: hsl(0, 0%, 20%) !important;
+}
+
+.high-contrast .text-gray-900 {
+  color: hsl(0, 0%, 100%) !important;
+}
+
+.high-contrast .text-gray-600 {
+  color: hsl(0, 0%, 80%) !important;
+}
+
+.high-contrast .text-gray-500 {
+  color: hsl(0, 0%, 70%) !important;
+}
+
+.high-contrast .border-gray-200 {
+  border-color: hsl(0, 0%, 50%) !important;
+}
+
+.high-contrast .border-gray-300 {
+  border-color: hsl(0, 0%, 60%) !important;
+}
+
+/* Melhorar contraste para botões e elementos interativos */
+.high-contrast .bg-\[#eb015b\] {
+  background-color: hsl(0, 0%, 100%) !important;
+  color: hsl(0, 0%, 0%) !important;
+}
+
+.high-contrast .hover\:bg-\[#c1014a\]:hover {
+  background-color: hsl(0, 0%, 80%) !important;
+}
+
+.high-contrast .text-\[#eb015b\] {
+  color: hsl(0, 0%, 100%) !important;
+}
+
+.high-contrast .hover\:text-\[#c1014a\]:hover {
+  color: hsl(0, 0%, 80%) !important;
+}
