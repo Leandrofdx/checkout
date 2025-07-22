@@ -11,7 +11,7 @@ const OPENROUTER_API_KEY = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY
 // --------------------------------------------------------------------
 // 2)  Configuração de modo de IA
 // --------------------------------------------------------------------
-export const AI_MODE = process.env.NEXT_PUBLIC_AI_MODE || "openai" // "openai", "openrouter", "local"
+export const AI_MODE = process.env.NEXT_PUBLIC_AI_MODE || "openrouter" // "openai", "openrouter", "local"
 export const AI_ENABLED = Boolean(OPENAI_API_KEY || OPENROUTER_API_KEY)
 
 // Debug para verificar configurações

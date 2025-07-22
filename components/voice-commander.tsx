@@ -63,16 +63,22 @@ export function VoiceCommander({ state, onUpdateState, trackAction }: VoiceComma
 
     recognitionRef.current.onresult = (event: any) => {
       let finalTranscript = ""
+      let interimTranscript = ""
 
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const transcript = event.results[i][0].transcript
         const isFinal = event.results[i].isFinal
+        
         if (isFinal) {
           finalTranscript += transcript
+        } else {
+          interimTranscript += transcript
         }
       }
 
-      setTranscript(finalTranscript)
+      console.log("🎤 PESSOA FALOU:", finalTranscript || interimTranscript)
+      
+      setTranscript(finalTranscript || interimTranscript)
       
       // Processar imediatamente se há resultado final
       if (finalTranscript.trim()) {
@@ -247,13 +253,21 @@ export function VoiceCommander({ state, onUpdateState, trackAction }: VoiceComma
     setIsProcessing(true)
     const lowerCommand = command.toLowerCase()
     
-    console.log("🎤 Processando comando:", command)
+    console.log("🎤 ===== PROCESSANDO COMANDO =====")
+    console.log("🎤 Comando original:", command)
+    console.log("🎤 Comando em minúsculas:", lowerCommand)
+    console.log("🎤 Estado atual:", {
+      isListening: isListening,
+      isProcessing: isProcessing,
+      currentStep: state.step
+    })
     
     try {
       // Wake word para ativar comandos de voz
       if (lowerCommand.includes("voz") || lowerCommand.includes("shopease") || lowerCommand.includes("shop ease") || 
           lowerCommand.includes("compras") || lowerCommand.includes("loja") ||
           lowerCommand.includes("checkout") || lowerCommand.includes("assistente")) {
+        console.log("🎤 Wake word detectada!")
         if (!isListening) {
           setIsListening(true)
           if (recognitionRef.current) {
@@ -266,6 +280,7 @@ export function VoiceCommander({ state, onUpdateState, trackAction }: VoiceComma
           }
           showFeedbackMessage("Comandos de voz ativados! Fale seu comando...", "success")
         } else {
+          console.log("🎤 Já estava ouvindo")
           showFeedbackMessage("Já estou ouvindo! Fale seu comando...", "info")
         }
         return
@@ -274,6 +289,7 @@ export function VoiceCommander({ state, onUpdateState, trackAction }: VoiceComma
       // Comando para desativar comandos de voz
       if (lowerCommand.includes("desativar") || lowerCommand.includes("parar") || lowerCommand.includes("sair") || 
           lowerCommand.includes("stop") || lowerCommand.includes("exit") || lowerCommand.includes("tchau")) {
+        console.log("🎤 Comando de desativação detectado")
         if (isListening) {
           setIsListening(false)
           showFeedbackMessage("Comandos de voz desativados!", "success")
@@ -285,11 +301,15 @@ export function VoiceCommander({ state, onUpdateState, trackAction }: VoiceComma
       
       // Só processar outros comandos se estiver ativo
       if (!isListening) {
+        console.log("🎤 Comandos de voz inativos, ignorando")
         return // Ignora todos os outros comandos se não estiver ativo
       }
       
+      console.log("🎤 Comando será processado (voz ativa)")
+      
       // Teste muito simples - qualquer comando que contenha "teste"
       if (lowerCommand.includes("teste")) {
+        console.log("🎤 Comando de teste detectado")
         onUpdateState({ expressDelivery: !state.expressDelivery })
         showFeedbackMessage("Teste executado!", "success")
         return
@@ -297,12 +317,14 @@ export function VoiceCommander({ state, onUpdateState, trackAction }: VoiceComma
       
       // Teste para qualquer comando que contenha "oi"
       if (lowerCommand.includes("oi")) {
+        console.log("🎤 Comando de saudação detectado")
         showFeedbackMessage("Olá! Comando reconhecido!", "success")
         return
       }
       
       // Teste para qualquer comando que contenha "ping"
       if (lowerCommand.includes("ping")) {
+        console.log("🎤 Comando ping detectado")
         showFeedbackMessage("Pong! Comando funcionando!", "success")
         return
       }
@@ -640,11 +662,14 @@ export function VoiceCommander({ state, onUpdateState, trackAction }: VoiceComma
         }
         return
       } else if (lowerCommand.includes("pagar") || lowerCommand.includes("pague agora") || lowerCommand.includes("buy now")) {
+        console.log("🎤 Comando 'BUY NOW' detectado")
         const buyNowButton = document.querySelector('[data-voice-action="buy-now"]') as HTMLElement
         if (buyNowButton) {
+          console.log("🎤 ✅ Botão BUY NOW encontrado, clicando...")
           buyNowButton.click()
           showFeedbackMessage("Pagamento processado!", "success")
         } else {
+          console.log("🎤 ❌ Botão BUY NOW não encontrado, navegando diretamente...")
           // Navegar diretamente para a página de sucesso
           router.push("/success")
           showFeedbackMessage("Pagamento processado! Redirecionando...", "success")
@@ -654,15 +679,18 @@ export function VoiceCommander({ state, onUpdateState, trackAction }: VoiceComma
       
       // Comandos para navegação com verificações baseadas no breadcrumb real
       else if (lowerCommand.includes("próxima") || lowerCommand.includes("proxima") || lowerCommand.includes("avançar") || lowerCommand.includes("avancar") || lowerCommand.includes("próximo") || lowerCommand.includes("proximo") || lowerCommand.includes("continuar")) {
+        console.log("🎤 Comando de navegação 'avançar' detectado")
         // Verificar estado atual
         const currentInfo = getCurrentStepInfo()
         console.log("🔍 Debug - Navegação próxima:", currentInfo)
         
         if (currentInfo.isLast) {
+          console.log("🎤 ❌ Já na última página")
           showFeedbackMessage(`Já está na última página (${currentInfo.name})!`, "info")
         } else {
           const stepOrder = ["cart", "shipping", "payment"]
           const nextStep = stepOrder[currentInfo.index + 1] as "cart" | "shipping" | "payment"
+          console.log("🎤 ✅ Navegando para próxima página:", nextStep)
           
           if (confirmNavigation(state.step, nextStep)) {
             navigateToStep(nextStep)
@@ -672,15 +700,18 @@ export function VoiceCommander({ state, onUpdateState, trackAction }: VoiceComma
         return
       } else if ((lowerCommand.includes("voltar") || lowerCommand.includes("anterior") || lowerCommand.includes("volta")) && 
                  !lowerCommand.includes("próxima") && !lowerCommand.includes("proxima") && !lowerCommand.includes("avançar") && !lowerCommand.includes("avancar")) {
+        console.log("🎤 Comando de navegação 'voltar' detectado")
         // Verificar estado atual
         const currentInfo = getCurrentStepInfo()
         console.log("🔍 Debug - Navegação voltar:", currentInfo)
         
         if (currentInfo.isFirst) {
+          console.log("🎤 ❌ Já na primeira página")
           showFeedbackMessage(`Já está na primeira página (${currentInfo.name})!`, "info")
         } else {
           const stepOrder = ["cart", "shipping", "payment"]
           const prevStep = stepOrder[currentInfo.index - 1] as "cart" | "shipping" | "payment"
+          console.log("🎤 ✅ Navegando para página anterior:", prevStep)
           
           if (confirmNavigation(state.step, prevStep)) {
             navigateToStep(prevStep)
@@ -693,6 +724,7 @@ export function VoiceCommander({ state, onUpdateState, trackAction }: VoiceComma
       // Comandos para navegação específica
       else if ((lowerCommand.includes("pagamento") || lowerCommand.includes("payment")) && 
                !lowerCommand.includes("próxima") && !lowerCommand.includes("proxima") && !lowerCommand.includes("avançar") && !lowerCommand.includes("avancar")) {
+        console.log("🎤 Comando de navegação 'pagamento' detectado")
         if (confirmNavigation(state.step, "payment")) {
           navigateToStep("payment")
           showFeedbackMessage("Indo para Payment!", "success")
@@ -700,6 +732,7 @@ export function VoiceCommander({ state, onUpdateState, trackAction }: VoiceComma
         return
       } else if ((lowerCommand.includes("envio") || lowerCommand.includes("shipping")) && 
                  !lowerCommand.includes("próxima") && !lowerCommand.includes("proxima") && !lowerCommand.includes("avançar") && !lowerCommand.includes("avancar")) {
+        console.log("🎤 Comando de navegação 'envio' detectado")
         if (confirmNavigation(state.step, "shipping")) {
           navigateToStep("shipping")
           showFeedbackMessage("Indo para Shipping!", "success")
@@ -707,6 +740,7 @@ export function VoiceCommander({ state, onUpdateState, trackAction }: VoiceComma
         return
       } else if ((lowerCommand.includes("carrinho") || lowerCommand.includes("cart")) && 
                  !lowerCommand.includes("próxima") && !lowerCommand.includes("proxima") && !lowerCommand.includes("avançar") && !lowerCommand.includes("avancar")) {
+        console.log("🎤 Comando de navegação 'carrinho' detectado")
         if (confirmNavigation(state.step, "cart")) {
           navigateToStep("cart")
           showFeedbackMessage("Voltando para Cart!", "success")
@@ -1085,7 +1119,15 @@ export function VoiceCommander({ state, onUpdateState, trackAction }: VoiceComma
         }
         return
       } else if (lowerCommand.includes("diminuir fonte") || lowerCommand.includes("fonte menor") || 
-                 lowerCommand.includes("texto menor") || lowerCommand.includes("diminuir texto")) {
+                 lowerCommand.includes("texto menor") || lowerCommand.includes("diminuir texto") ||
+                 lowerCommand.includes("reduzir fonte") || lowerCommand.includes("diminui fonte") ||
+                 lowerCommand.includes("fonte pequena") || lowerCommand.includes("texto pequeno") ||
+                 lowerCommand.includes("letra menor") || lowerCommand.includes("letra pequena") ||
+                 lowerCommand.includes("diminuir letra") || lowerCommand.includes("reduzir letra") ||
+                 lowerCommand.includes("fonte menor") || lowerCommand.includes("texto menor") ||
+                 lowerCommand.includes("diminuir tamanho") || lowerCommand.includes("reduzir tamanho") ||
+                 lowerCommand.includes("fonte mais pequena") || lowerCommand.includes("texto mais pequeno") ||
+                 lowerCommand.includes("letra mais pequena") || lowerCommand.includes("diminuir tamanho da fonte")) {
         // Simular clique no botão de diminuir fonte
         const decreaseButton = document.querySelector('button[title="Diminuir tamanho da fonte"]') as HTMLElement
         if (decreaseButton) {
@@ -1109,9 +1151,11 @@ export function VoiceCommander({ state, onUpdateState, trackAction }: VoiceComma
       }
       
       else {
+        console.log("🎤 ❌ Comando não reconhecido:", command)
         showFeedbackMessage("Comando não reconhecido. Diga 'ajuda' para ver comandos disponíveis", "error")
       }
       
+      console.log("🎤 ===== FIM PROCESSAMENTO COMANDO =====")
       trackAction("voice_command_executed", { command: lowerCommand })
       
     } catch (error) {
